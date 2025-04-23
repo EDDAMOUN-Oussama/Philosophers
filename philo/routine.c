@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:35:12 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/04/20 20:08:49 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:47:23 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ void	*ft_routine(void *d)
 	f_r = f_l - 1;
 	if (f_r < 0)
 		f_r = p->num_of_philos - 1;
-	if (f_l % 2 == 0)
-		usleep(1000);
 	if (p->num_of_philos == 1)
 		ft_usleep(p->time_to_die + 1, d);
+	if (f_l % 2 == 0)
+		usleep(2000);
 	while (!ft_get(&p->dead_flag, &p->dead_lock))
 	{
 		if (!ft_eat(p, f_l))

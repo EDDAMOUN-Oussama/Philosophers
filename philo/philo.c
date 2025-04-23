@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:07:11 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/04/20 17:00:16 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:16:11 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int	main(int ac, char **av)
 {
 	t_data	data;
 	int		i;
+	int		v;
 
 	if (ac > 6 || ac < 5 || !ft_stock_arg(ac, av, &data))
 	{
@@ -111,10 +112,11 @@ int	main(int ac, char **av)
 		return (1);
 	}
 	i = -1;
-	ft_inisial(&data);
+	v = ft_inisial(&data);
 	while (++i < data.num_of_philos)
 	{
-		pthread_join(data.philos[i].thread, NULL);
+		if (v == 0)
+			pthread_join(data.philos[i].thread, NULL);
 		pthread_mutex_destroy(&data.philos[i].meal_lock);
 		pthread_mutex_destroy(&data.forks[i]);
 	}
