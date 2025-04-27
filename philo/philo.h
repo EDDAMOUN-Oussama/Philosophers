@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:07:33 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/04/23 09:13:47 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/04/25 16:11:22 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <string.h>
 
 typedef struct s_philo
 {

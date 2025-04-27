@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:07:11 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/04/23 09:16:11 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/04/26 16:49:04 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 void	ft_easy_init(int ac, char **av, t_data *d)
 {
+	memset(d, 0, sizeof(t_data));
 	d->num_of_philos = ft_atoi(av[1]);
 	d->time_to_die = ft_atoi(av[2]);
 	d->time_to_eat = ft_atoi(av[3]);
@@ -35,8 +36,8 @@ int	ft_stock_arg(int ac, char **av, t_data *d)
 	int	i;
 
 	ft_easy_init(ac, av, d);
-	if (d->num_of_philos < 1 || d->time_to_die == -1 || d->time_to_eat == -1
-		|| d->time_to_sleep == -1 || d->n_eat == -1)
+	if (d->num_of_philos < 1 || d->time_to_die < 1 || d->time_to_eat < 1
+		|| d->time_to_sleep < 1 || d->n_eat == -1)
 		return (0);
 	d->philos = malloc(sizeof(t_philo) * d->num_of_philos);
 	if (!d->philos)
