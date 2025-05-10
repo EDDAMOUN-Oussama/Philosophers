@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ) philo.h
-	cc -Wall -Wextra -Werror $(OBJ) -o $(NAME) -g -fsanitize=thread
+	cc -Wall -Wextra -Werror $(OBJ) -o $(NAME) 
 
 %.o: %.c philo.h
 	cc -Wall -Wextra -Werror -c $< -o $@

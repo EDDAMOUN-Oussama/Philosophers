@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:35:12 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/04/26 11:16:47 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/10 18:43:30 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,13 @@ int	ft_eat(t_data *d, int id)
 		pthread_mutex_lock(d->philos[id].r_fork);
 		ft_print(d, id, 'f');
 		ft_print(d, id, 'e');
+		pthread_mutex_lock(&d->philos[id].meal_lock);
+		d->philos[id].last_meal = ft_time();
+		pthread_mutex_unlock(&d->philos[id].meal_lock);
 		ft_usleep(d->time_to_eat, d);
 		pthread_mutex_unlock(d->philos[id].r_fork);
 		pthread_mutex_unlock(d->philos[id].l_fork);
 		pthread_mutex_lock(&d->philos[id].meal_lock);
-		d->philos[id].last_meal = ft_time();
 		if (d->philos[id].meals_eaten != -2)
 			d->philos[id].meals_eaten++;
 		if (!(d->philos[id].meals_eaten < d->n_eat || d->n_eat < 0))
@@ -104,7 +106,7 @@ void	*ft_routine(void *d)
 		ft_usleep(p->time_to_die + 1, d);
 	}
 	if (f_l % 2 == 0)
-		usleep(2000);
+		usleep(p->time_to_eat / 2 * 1000);
 	while (!ft_get(&p->dead_flag, &p->dead_lock))
 	{
 		if (!ft_eat(p, f_l))
