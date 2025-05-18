@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:35:12 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/18 11:45:30 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:06:33 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,10 @@ int	ft_eat(t_data *d, int id)
 void	*ft_routine(void *d)
 {
 	t_data	*p;
-	int		f_r;
 	int		f_l;
 
 	p = (t_data *)d;
 	f_l = ft_set(&p->id, &p->id_lock, 0, 'i');
-	f_r = (f_l - 1 + p->num_of_philos) % p->num_of_philos;
 	ft_print(p, f_l, 't');
 	if (p->num_of_philos == 1)
 	{
