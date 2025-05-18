@@ -1,14 +1,14 @@
-NAME = philo
-SRC = philo.c routine.c utils.c
+NAME = philo_bonus
+SRC = philo_bonus.c routine_bonus.c utils_bonus.c utils2_bonus.c
 OBJ = $(SRC:.c=.o)
-FLAGS = -Wall -Wextra -Werror #  -g -fsanitize=thread
+FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(OBJ) philo.h
+$(NAME): $(OBJ) philo_bonus.h
 	cc $(FLAGS) $(OBJ) -o $(NAME) 
 
-%.o: %.c philo.h
+%.o: %.c philo_bonus.h
 	cc $(FLAGS) -c $< -o $@
 
 clean:

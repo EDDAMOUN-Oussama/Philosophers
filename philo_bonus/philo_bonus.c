@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 20:08:56 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/10 20:22:22 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 12:49:07 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	ft_data_init(int ac, char **av, t_data *d)
 {
-	memset(d, 0, sizeof(t_data));
 	d->num_of_philos = ft_atoi(av[1]);
 	d->t_to_die = ft_atoi(av[2]);
 	d->t_to_eat = ft_atoi(av[3]);
@@ -27,12 +26,15 @@ int	ft_data_init(int ac, char **av, t_data *d)
 		return (0);
 	sem_unlink("/forks");
 	sem_unlink("/print");
+	sem_unlink("/finish");
 	d->forks_sem = sem_open("/forks", O_EXCL | O_CREAT, 0644, d->num_of_philos);
 	d->print_sem = sem_open("/print", O_EXCL | O_CREAT, 0644, 1);
-	if (!d->forks_sem || !d->print_sem)
+	d->finish_sem = sem_open("/finish", O_EXCL | O_CREAT, 0644, 0);
+	if (!d->forks_sem || !d->print_sem || !d->finish_sem)
 	{
 		sem_unlink("/forks");
 		sem_unlink("/print");
+		sem_unlink("/finish");
 		printf("Error: open semaphore fatal\n");
 		exit(1);
 	}
@@ -82,7 +84,6 @@ void	ft_init(t_data *d, t_philo *p)
 void	ft_inisial(t_data *d, t_philo *p)
 {
 	int	i;
-	int	s;
 
 	ft_init(d, p);
 	i = -1;
@@ -99,13 +100,10 @@ void	ft_inisial(t_data *d, t_philo *p)
 		if (p[i].pid == 0)
 			ft_routine(&p[i]);
 	}
-	i = -1;
-	while (++i < d->num_of_philos)
-	{
-		waitpid(-1, &s, 0);
-		if (s != 0)
-			ft_kill(p, d->num_of_philos);
-	}
+	if (d->num_of_philos > 1 && d->n_eat > 0)
+		if (pthread_create(&d->thread, NULL, ft_wait_finish, p))
+			ft_clean(p, 1, d->num_of_philos, 0);
+	ft_wait_kill(p, d);
 }
 
 int	main(int ac, char **av)
@@ -113,6 +111,7 @@ int	main(int ac, char **av)
 	t_data	data;
 	t_philo	*p;
 
+	memset(&data, 0, sizeof(t_data));
 	if (ac > 6 || ac < 5 || !ft_data_init(ac, av, &data))
 	{
 		write(2, "Error: argements not valid\n", 27);
@@ -127,6 +126,6 @@ int	main(int ac, char **av)
 		exit(1);
 	}
 	ft_inisial(&data, p);
-	ft_clean(p, 1, data.num_of_philos, 0);
+	ft_clean(p, 0, data.num_of_philos, 0);
 	return (0);
 }

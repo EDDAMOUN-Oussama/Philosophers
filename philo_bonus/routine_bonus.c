@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/10 20:12:42 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/10 20:28:51 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 15:39:10 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,22 @@
 void	ft_kill(t_philo *p, int stop)
 {
 	int	i;
+	int	s;
 
 	i = -1;
 	while (++i < stop)
 		kill(p[i].pid, 9);
 	i = -1;
 	while (++i < stop)
-		wait(NULL);
+		waitpid(-1, &s, 0);
 }
 
 void	ft_print(t_philo *p, char type)
 {
 	long	date;
 
-	date = ft_time() - p->data->start_time;
 	sem_wait(p->data->print_sem);
+	date = ft_time() - p->data->start_time;
 	if (type == 'f')
 		printf("%ld %d has taken a fork\n", date, p->id);
 	else if (type == 'e')
@@ -44,18 +45,23 @@ void	ft_print(t_philo *p, char type)
 void	*ft_test_dead(void *d)
 {
 	t_philo	*p;
+	long	time_form_eat;
 
 	p = (t_philo *)d;
 	while (1)
 	{
-		if (ft_time() - get_last_meal(p) > p->data->t_to_die)
+		time_form_eat = ft_time() - get_last_meal(p);
+		if (time_form_eat >= p->data->t_to_die)
 		{
 			sem_wait(p->data->print_sem);
 			printf("%ld %d died\n", ft_time() - p->data->start_time, p->id);
 			sem_unlink(p->name_sem);
 			exit(-1);
 		}
-		usleep(900);
+		if (time_form_eat - p->data->t_to_die > 2)
+			usleep((time_form_eat - p->data->t_to_die) * 800);
+		else
+			usleep(500);
 	}
 	return (NULL);
 }
@@ -78,6 +84,7 @@ void	ft_routine(t_philo *p)
 		ft_clean(p, -1, 0, 1);
 	while (1)
 	{
+		ft_print(p, 't');
 		sem_wait(p->data->forks_sem);
 		ft_print(p, 'f');
 		sem_wait(p->data->forks_sem);
@@ -90,10 +97,9 @@ void	ft_routine(t_philo *p)
 		sem_post(p->data->forks_sem);
 		sem_post(p->data->forks_sem);
 		p->meals_eaten++;
-		if (p->meals_eaten >= p->data->n_eat && p->data->n_eat >= 0)
-			ft_clean(p, 0, 0, 1);
+		if (p->meals_eaten == p->data->n_eat && p->data->n_eat >= 0)
+			sem_post(p->data->finish_sem);
 		ft_print(p, 's');
 		ft_usleep(p->data->t_to_sleep, p);
-		ft_print(p, 't');
 	}
 }

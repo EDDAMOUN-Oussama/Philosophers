@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:07:01 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/03 10:54:04 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 13:21:26 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	ft_usleep(long milliseconds, t_data *d)
 	{
 		if (ft_get(&d->dead_flag, &d->dead_lock))
 			return (0);
-		usleep(50);
+		usleep(100);
 	}
 	return (0);
 }

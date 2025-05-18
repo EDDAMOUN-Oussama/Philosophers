@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:35:12 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/10 18:43:30 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 11:45:30 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void	ft_print(t_data *d, int id, char type)
 	long	date;
 	int		dead;
 
-	date = ft_time() - d->start_time;
 	pthread_mutex_lock(&d->write_lock);
+	date = ft_time() - d->start_time;
 	dead = ft_get(&d->dead_flag, &d->dead_lock);
 	if (type == 'f' && !dead)
 		printf("%ld %d has taken a fork\n", date, id + 1);
@@ -75,16 +75,14 @@ int	ft_eat(t_data *d, int id)
 		ft_usleep(d->time_to_eat, d);
 		pthread_mutex_unlock(d->philos[id].r_fork);
 		pthread_mutex_unlock(d->philos[id].l_fork);
-		pthread_mutex_lock(&d->philos[id].meal_lock);
+		ft_print(d, id, 's');
+		ft_usleep(d->time_to_sleep, d);
 		if (d->philos[id].meals_eaten != -2)
 			d->philos[id].meals_eaten++;
-		if (!(d->philos[id].meals_eaten < d->n_eat || d->n_eat < 0))
-		{
-			pthread_mutex_unlock(&d->philos[id].meal_lock);
+		if (!(d->philos[id].meals_eaten != d->n_eat || d->n_eat < 0))
 			ft_set(&d->finish, &d->finish_lock, 0, 'i');
-			return (0);
-		}
-		pthread_mutex_unlock(&d->philos[id].meal_lock);
+		if (ft_get(&d->finish, &d->finish_lock) < d->num_of_philos)
+			ft_print(d, id, 't');
 	}
 	return (1);
 }
@@ -97,23 +95,21 @@ void	*ft_routine(void *d)
 
 	p = (t_data *)d;
 	f_l = ft_set(&p->id, &p->id_lock, 0, 'i');
-	f_r = f_l - 1;
-	if (f_r < 0)
-		f_r = p->num_of_philos - 1;
+	f_r = (f_l - 1 + p->num_of_philos) % p->num_of_philos;
+	ft_print(p, f_l, 't');
 	if (p->num_of_philos == 1)
 	{
-		ft_print(d, f_l, 'f');
+		pthread_mutex_lock(p->philos[f_l].l_fork);
+		ft_print(p, f_l, 'f');
 		ft_usleep(p->time_to_die + 1, d);
+		pthread_mutex_unlock(p->philos[f_l].l_fork);
 	}
 	if (f_l % 2 == 0)
 		usleep(p->time_to_eat / 2 * 1000);
-	while (!ft_get(&p->dead_flag, &p->dead_lock))
+	while (!ft_get(&p->dead_flag, &p->dead_lock) && ft_get(&p->finish,
+			&p->finish_lock) < p->num_of_philos)
 	{
-		if (!ft_eat(p, f_l))
-			return (NULL);
-		ft_print(p, f_l, 's');
-		ft_usleep(p->time_to_sleep, p);
-		ft_print(p, f_l, 't');
+		ft_eat(p, f_l);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:07:11 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/04 13:14:22 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:01:14 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	ft_dead_test(t_data *d)
 	finish = 0;
 	while (!ft_get(&d->dead_flag, &d->dead_lock) && finish != d->num_of_philos)
 	{
-		usleep(10);
+		usleep(100);
 		finish = ft_get(&d->finish, &d->finish_lock);
 		i = ft_dead(d);
 		if (i > -1)
