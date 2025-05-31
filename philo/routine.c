@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:35:12 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/18 16:06:33 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 17:36:58 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_print(t_data *d, int id, char type)
 	pthread_mutex_unlock(&d->write_lock);
 }
 
-int	ft_eat(t_data *d, int id)
+void	ft_eat(t_data *d, int id)
 {
 	if (!ft_get(&d->dead_flag, &d->dead_lock))
 	{
@@ -75,16 +75,18 @@ int	ft_eat(t_data *d, int id)
 		ft_usleep(d->time_to_eat, d);
 		pthread_mutex_unlock(d->philos[id].r_fork);
 		pthread_mutex_unlock(d->philos[id].l_fork);
-		ft_print(d, id, 's');
-		ft_usleep(d->time_to_sleep, d);
 		if (d->philos[id].meals_eaten != -2)
 			d->philos[id].meals_eaten++;
 		if (!(d->philos[id].meals_eaten != d->n_eat || d->n_eat < 0))
 			ft_set(&d->finish, &d->finish_lock, 0, 'i');
 		if (ft_get(&d->finish, &d->finish_lock) < d->num_of_philos)
+		{
+			ft_print(d, id, 's');
+			ft_usleep(d->time_to_sleep, d);
+		}
+		if (ft_get(&d->finish, &d->finish_lock) < d->num_of_philos)
 			ft_print(d, id, 't');
 	}
-	return (1);
 }
 
 void	*ft_routine(void *d)

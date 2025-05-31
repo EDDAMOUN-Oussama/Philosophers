@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:07:11 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/17 18:01:14 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:55:22 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,10 @@ int	ft_inisial(t_data *d)
 	{
 		d->philos[i].meals_eaten = 0;
 		d->philos[i].last_meal = d->start_time;
+	}
+	i = -1;
+	while (++i < d->num_of_philos)
+	{
 		pthread_mutex_init(&d->philos[i].meal_lock, NULL);
 		if (pthread_create(&(d->philos[i].thread), NULL, ft_routine,
 				(void *)d))

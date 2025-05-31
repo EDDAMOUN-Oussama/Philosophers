@@ -1,7 +1,7 @@
 NAME = philo
 SRC = philo.c routine.c utils.c
 OBJ = $(SRC:.c=.o)
-FLAGS = -Wall -Wextra -Werror #  -g -fsanitize=thread
+FLAGS = -Wall -Wextra -Werror 
 
 all: $(NAME)
 

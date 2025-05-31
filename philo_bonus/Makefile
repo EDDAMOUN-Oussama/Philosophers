@@ -2,7 +2,6 @@ NAME = philo_bonus
 SRC = philo_bonus.c routine_bonus.c utils_bonus.c utils2_bonus.c
 OBJ = $(SRC:.c=.o)
 FLAGS = -Wall -Wextra -Werror
-
 all: $(NAME)
 
 $(NAME): $(OBJ) philo_bonus.h

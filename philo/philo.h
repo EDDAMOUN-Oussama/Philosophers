@@ -6,7 +6,7 @@
 /*   By: oeddamou <oeddamou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 16:07:33 by oeddamou          #+#    #+#             */
-/*   Updated: 2025/05/12 18:05:41 by oeddamou         ###   ########.fr       */
+/*   Updated: 2025/05/18 17:07:14 by oeddamou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int					ft_atoi(char *str);
 long				ft_time(void);
 int					ft_usleep(long milliseconds, t_data *d);
 int					ft_stock_arg(int ac, char **av, t_data *d);
-int					ft_eat(t_data *d, int id);
+void				ft_eat(t_data *d, int id);
 void				*ft_routine(void *d);
 int					ft_inisial(t_data *d);
 void				ft_easy_init(int ac, char **av, t_data *d);
